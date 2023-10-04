@@ -70,9 +70,11 @@ export const verificationEmail = catchAsync(async (req, res, next) => {
 });
 
 export const loginUser = catchAsync(async (req, res, next) => {
+  const userRole = req.body?.role || "user";
   const user = await User.findOne({
     email: req.body.email,
     isVerified: true,
+    role: userRole,
   }).select("+password");
   if (!user) throw createError(401, `Email doesn't match`);
 

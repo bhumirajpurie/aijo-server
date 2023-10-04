@@ -58,7 +58,7 @@ router.put("/reset-email", codeValidationRules(), validate, verificationEmail);
 router.put(
   "/update/password",
   protect,
-  updatePasswordValidationRules,
+  updatePasswordValidationRules(),
   validate,
   updatePassword
 );

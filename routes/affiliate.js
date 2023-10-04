@@ -6,13 +6,16 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/user.js";
-import { protect, permission } from "../middlewares/auth.js";
+import { getAffiliates, createAffiliate } from "../controllers/affiliate.js";
+
 import {
   createUserValidationRules,
   deleteUserValidationRules,
   getUserValidationRules,
   updateUserValidationRules,
 } from "../validators/userValidator.js";
+
+import { protect, permission } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validate.js";
 
 const router = express.Router();

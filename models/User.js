@@ -43,6 +43,14 @@ const userSchema = new Schema(
     newEmail: String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
+
+    //affiliate
+    promoCode: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "PromoCode",
+      },
+    ],
   },
 
   { timestamps: true }

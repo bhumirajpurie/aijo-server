@@ -19,7 +19,7 @@ router
   .put(protect, updateCartItem)
   .delete(protect, deleteCart);
 
-router.route("/all-cart").get(protect, permission("admin"), getCarts);
+router.route("/all-cart").get(protect, permission(["admin"]), getCarts);
 
 router.route("/products/:id").delete(protect, deleteCartItem);
 
