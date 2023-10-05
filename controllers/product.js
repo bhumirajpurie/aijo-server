@@ -17,7 +17,7 @@ export const getProducts = catchAsync(async (req, res) => {
   const { keyWord, minPrice, maxPrice, page, sort, perPage } = req.query;
 
   const currentPage = Number(page || 1);
-  const productsPerPage = Number(perPage || 16);
+  const productsPerPage = Number(perPage || 12);
 
   const priceFilter = {
     price: {

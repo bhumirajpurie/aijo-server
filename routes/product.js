@@ -20,13 +20,12 @@ router
   .post(upload.array("productImage", 5), createProduct);
 
 router.get("/all", getAllProducts);
+router.route("/featured").get(getFeaturedProducts);
 
 router
   .route("/:id")
   .get(getProduct)
   .put(upload.array("productImage", 5), updateProduct)
   .delete(deleteProduct);
-
-router.route("/featured").get(getFeaturedProducts);
 
 export default router;

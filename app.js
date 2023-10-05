@@ -50,5 +50,5 @@ app.use(errorHandler);
 
 // LISTEN ON PORT 8081
 app.listen(process.env.PORT, () => {
-  console.log("Server running on port 8081");
+  console.log(`Server running on port ${process.env.PORT}`);
 });
