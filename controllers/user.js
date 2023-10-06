@@ -37,19 +37,26 @@ export const createUser = catchAsync(async (req, res, next) => {
 
 // Update User
 export const updateUser = catchAsync(async (req, res, next) => {
-  const { firstName, lastName, phoneNumber, birthDate } = req.body;
-  const updatedUser = await User.findByIdAndUpdate(
-    req.params.id,
-    { firstName, lastName, phoneNumber, birthDate },
-    {
-      new: true,
-    }
-  );
+  try {
+    const { firstName, lastName, phoneNumber, birthDate } = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { firstName, lastName, phoneNumber, birthDate },
+      {
+        new: true,
+      }
+    );
 
-  if (!updatedUser)
-    throw createError(404, `User is not found with id of ${req.params.id}`);
+    if (!updatedUser)
+      throw createError(404, `User is not found with id of ${req.params.id}`);
 
-  res.status(201).send({ status: "success", data: updatedUser });
+    res.status(201).send({ status: "success", data: updatedUser });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
 });
 
 // update address book

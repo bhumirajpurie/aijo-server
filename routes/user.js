@@ -34,12 +34,11 @@ router
 
 router.route("/my-details").get(protect, validate, getUser);
 router
-  .route("/address-book")
+  .route("/profile")
   .put(protect, updateUserAddressValidationRules(), validate, updateUser);
 
 router
   .route("/:id")
   .put(protect, updateUserValidationRules(), validate, updateUser)
   .delete(protect, deleteUserValidationRules(), validate, deleteUser);
-
 export default router;

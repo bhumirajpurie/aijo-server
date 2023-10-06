@@ -26,10 +26,8 @@ export const updateUserValidationRules = () => [
 
 // update address validation rules
 export const updateUserAddressValidationRules = () => [
-  validateMongoId("id"),
-  // validate address fields
-  validateName(["province", "city", "area"]),
-  // validate fullAddress
-  validateName(["fullAddress"]),
+  validateName(["firstName", "lastName"]),
+  validatePhoneNumber("phoneNumber"),
+  validateBirthDate("birthDate"),
 ];
 export const deleteUserValidationRules = () => validateMongoId("id");
