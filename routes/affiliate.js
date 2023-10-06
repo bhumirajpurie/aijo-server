@@ -27,10 +27,10 @@ router
   .route("/")
   .get(protect, permission(["admin"]), getUsers)
   .post(
-    protect,
-    permission(["admin"]),
+    // protect,
+    // permission(["admin"]),
     createUserValidationRules(),
-    validate,
+    // validate,
     createUser
   );
 

@@ -28,7 +28,7 @@ export const validateUserRole = (fields) => {
     if (value === "admin") {
       throw new Error("You can't create admin user.");
     }
-    if (!["admin", "user", "affiliate"].includes(value)) {
+    if (!["admin", "user", "affiliator"].includes(value)) {
       throw new Error(`${value} role doesn't exit.`);
     }
     return true;

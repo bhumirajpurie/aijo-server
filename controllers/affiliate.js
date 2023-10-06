@@ -4,14 +4,14 @@ import User from "../models/User.js";
 
 // Get All Affiliate
 export const getAffiliates = catchAsync(async (req, res, next) => {
-  const users = await User.find({ role: "affiliate" });
+  const users = await User.find({ role: "affiliator" });
   if (!users) throw createError(404, `No affiliates found`);
   res.status(200).send({ status: "success", data: users });
 });
 
 // Get Single User
 export const getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id, { role: "affiliate" });
+  const user = await User.findById(req.params.id, { role: "affiliator" });
 
   if (!user)
     throw createError(404, `User is not found with id of ${req.params.id}`);
@@ -21,7 +21,7 @@ export const getUser = catchAsync(async (req, res, next) => {
 
 // Create Affiliate
 export const createAffiliate = catchAsync(async (req, res, next) => {
-  await User.create({ ...req.body, role: "affiliate", isVerified: true });
+  await User.create({ ...req.body, role: "affiliator", isVerified: true });
   res
     .status(201)
     .send({ status: "success", message: `Affiliate created successfully` });

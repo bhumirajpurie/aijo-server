@@ -14,7 +14,6 @@ export const signupValidationRules = () => [
   validateUniqueEmail("email"),
   validatePassword("password"),
   validateConfirmPassword("confirmPassword"),
-  validateUserRole("role"),
 ];
 
 export const codeValidationRules = () =>

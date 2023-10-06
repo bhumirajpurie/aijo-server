@@ -9,6 +9,11 @@ export const getUsers = catchAsync(async (req, res, next) => {
   if (!users) throw createError(404, `No users found`);
   res.status(200).send({ status: "success", data: users });
 });
+export const getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find();
+  if (!users) throw createError(404, `No users found`);
+  res.status(200).send({ status: "success", data: users });
+});
 
 // Get Single User
 export const getUser = catchAsync(async (req, res, next) => {

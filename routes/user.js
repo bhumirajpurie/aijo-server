@@ -5,6 +5,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  getAllUsers,
 } from "../controllers/user.js";
 import { protect, permission } from "../middlewares/auth.js";
 import {

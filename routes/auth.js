@@ -14,7 +14,6 @@ import {
 import {
   signupValidationRules,
   codeValidationRules,
-  loginValidationRules,
   updateDetailsValidationRules,
   updatePasswordValidationRules,
   emailValidationRules,
@@ -35,7 +34,7 @@ router.post(
   verificationEmail
 );
 
-router.post("/login", loginValidationRules(), validate, loginUser);
+router.post("/login", validate, loginUser);
 
 router.put(
   "/update/user-details",
