@@ -23,7 +23,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(protect, permission(["admin"]), getUsers)
+  .get(protect, getUsers)
   .post(
     protect,
     permission(["admin"]),
@@ -33,6 +33,7 @@ router
   );
 
 router.route("/my-details").get(protect, validate, getUser);
+router.route("/all").get(protect, validate, getAllUsers);
 router
   .route("/profile")
   .put(protect, updateUserAddressValidationRules(), validate, updateUser);

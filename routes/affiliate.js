@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
 } from "../controllers/user.js";
+
 import { getAffiliates, createAffiliate } from "../controllers/affiliate.js";
 
 import {
@@ -23,16 +23,16 @@ const router = express.Router();
 // router.use(protect);
 // router.use();
 
-router
-  .route("/")
-  .get(protect, permission(["admin"]), getUsers)
-  .post(
-    // protect,
-    // permission(["admin"]),
-    createUserValidationRules(),
-    // validate,
-    createUser
-  );
+router.route("/").get(protect, getAffiliates).post(
+  // protect,
+  // permission(["admin"]),
+  // createUserValidationRules(),
+  // validate,
+  createUser
+  // (req, res) => {
+  //   res.send("Hello");
+  // }
+);
 
 router
   .route("/:id")

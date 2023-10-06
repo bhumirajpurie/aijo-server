@@ -73,14 +73,12 @@ export const loginUser = catchAsync(async (req, res, next) => {
   const userRole = req.body?.role || "user";
   const user = await User.findOne({
     email: req.body.email,
-    isVerified: true,
-    role: userRole,
   }).select("+password");
   if (!user) throw createError(401, `Email doesn't match`);
 
-  if (!user.isVerified) {
-    throw createError(401, `Please verify your email before logging in`);
-  }
+  // if (!user.isVerified) {
+  //   throw createError(401, `Please verify your email before logging in`);
+  // }
 
   const isPassword = await user.matchPassword(req.body.password);
   if (!isPassword) throw createError(401, `Password doesn't match`);

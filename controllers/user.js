@@ -10,7 +10,7 @@ export const getUsers = catchAsync(async (req, res, next) => {
   res.status(200).send({ status: "success", data: users });
 });
 export const getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
+  const users = await User.find({ email: "khalifaanil84@gmail.com" });
   if (!users) throw createError(404, `No users found`);
   res.status(200).send({ status: "success", data: users });
 });
@@ -79,6 +79,6 @@ export const deleteUser = catchAsync(async (req, res, next) => {
 
   await User.findByIdAndRemove(req.params.id);
   res
-    .status(204)
+    .status(200)
     .send({ status: "success", message: "User Deleted Successfully" });
 });
