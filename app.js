@@ -19,6 +19,7 @@ import cartRouter from "./routes/cart.js";
 import orderRouter from "./routes/order.js";
 import promoCodeRouter from "./routes/promoCode.js";
 import affiliateRouter from "./routes/affiliate.js";
+import addressBook from "./routes/address-book.routes.js";
 
 // INITIALIZE APP
 const app = express();
@@ -40,6 +41,7 @@ app.use("/api/v1/carts", cartRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/affiliates", affiliateRouter);
 app.use("/api/v1/promo-code", promoCodeRouter);
+app.use("/api/v1/address-book", addressBook);
 
 // CONNECT TO DATABASE
 await connectDatabase;

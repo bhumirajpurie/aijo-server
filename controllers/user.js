@@ -17,10 +17,11 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
 
 // Get Single User
 export const getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.user).select(
+    "-password -verificationCode -__v -createdAt -updatedAtd"
+  );
 
-  if (!user)
-    throw createError(404, `User is not found with id of ${req.params.id}`);
+  if (!user) throw createError(404, `User is not found with id of ${req.user}`);
 
   res.status(200).send({ status: "success", data: user });
 });
@@ -36,9 +37,14 @@ export const createUser = catchAsync(async (req, res, next) => {
 
 // Update User
 export const updateUser = catchAsync(async (req, res, next) => {
-  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const { firstName, lastName, phoneNumber, birthDate } = req.body;
+  const updatedUser = await User.findByIdAndUpdate(
+    req.params.id,
+    { firstName, lastName, phoneNumber, birthDate },
+    {
+      new: true,
+    }
+  );
 
   if (!updatedUser)
     throw createError(404, `User is not found with id of ${req.params.id}`);
@@ -46,6 +52,17 @@ export const updateUser = catchAsync(async (req, res, next) => {
   res.status(201).send({ status: "success", data: updatedUser });
 });
 
+// update address book
+export const updateAddressBook = catchAsync(async (req, res, next) => {
+  const { address } = req.body;
+  const user = await User.findById(req.user);
+  if (!user) throw createError(404, `User is not found with id of ${req.user}`);
+  user.address.push(address);
+  await user.save();
+  res
+    .status(201)
+    .send({ status: "success", message: "address book updated successfully" });
+});
 // Delete User
 export const deleteUser = catchAsync(async (req, res, next) => {
   const deleteUser = await User.findById(req.params.id);

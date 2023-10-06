@@ -4,6 +4,8 @@ import {
   validateUserRole,
   validateUniqueEmail,
   validateMongoId,
+  validatePhoneNumber,
+  validateBirthDate,
 } from "./rootValidator.js";
 
 export const createUserValidationRules = () => [
@@ -18,8 +20,16 @@ export const getUserValidationRules = () => validateMongoId("id");
 export const updateUserValidationRules = () => [
   validateMongoId("id"),
   validateName(["firstName", "lastName"]),
-  validateUniqueEmail("email"),
-  validatePassword("password"),
+  validatePhoneNumber("phoneNumber"),
+  validateBirthDate("birthDate"),
 ];
 
+// update address validation rules
+export const updateUserAddressValidationRules = () => [
+  validateMongoId("id"),
+  // validate address fields
+  validateName(["province", "city", "area"]),
+  // validate fullAddress
+  validateName(["fullAddress"]),
+];
 export const deleteUserValidationRules = () => validateMongoId("id");

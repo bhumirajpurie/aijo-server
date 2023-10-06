@@ -2,12 +2,35 @@ import { body, check, param } from "express-validator";
 import User from "../models/User.js";
 import PromoCode from "../models/PromoCode.js";
 
+// validate name
 export const validateName = (fields) => {
   return body(fields)
     .notEmpty()
     .withMessage("Firstname and Lastname are required.")
     .isLength({ min: 2 })
     .withMessage("Firstname and Lastname should be greater than two character.")
+    .trim()
+    .escape();
+};
+// validate phoneNumber
+export const validatePhoneNumber = (fields) => {
+  return body(fields)
+    .notEmpty()
+    .withMessage("Phone number is required")
+    .isLength({ min: 10, max: 10 })
+    .withMessage("Phone number must be 10 digits")
+    .trim()
+    .escape();
+};
+
+// validate birthDate
+export const validateBirthDate = (fields) => {
+  return body(fields)
+    .notEmpty()
+    .withMessage("Birth date is required")
+    .isDate()
+    .withMessage("Birth date must be a valid date")
+    .toDate()
     .trim()
     .escape();
 };
@@ -145,6 +168,39 @@ export const validateDescription = (fields) => {
     .withMessage("Description is required.")
     .isLength({ min: 10, max: 500 })
     .withMessage("Description must be atleast 10 characters long.")
+    .trim()
+    .escape();
+};
+
+// validate city
+export const validateCity = (fields) => {
+  return body(fields)
+    .notEmpty()
+    .withMessage("City is required.")
+    .isLength({ min: 5, max: 50 })
+    .withMessage("City must be at least 2 characters long.")
+    .trim()
+    .escape();
+};
+
+// validate province
+export const validateProvince = (fields) => {
+  return body(fields)
+    .notEmpty()
+    .withMessage("Province is required.")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Province must be at least 2 characters long.")
+    .trim()
+    .escape();
+};
+
+// validate area
+export const validateArea = (fields) => {
+  return body(fields)
+    .notEmpty()
+    .withMessage("Area is required.")
+    .isLength({ min: 2, max: 50 })
+    .withMessage("Area must be at least 2 characters long.")
     .trim()
     .escape();
 };

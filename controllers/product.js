@@ -9,7 +9,6 @@ export const createProduct = catchAsync(async (req, res) => {
   req.body.images = req.files.map((file) => file.path);
 
   const product = await Product.create(req.body);
-  console.log(product);
   res.status(201).send({ status: "success", product: product });
 });
 

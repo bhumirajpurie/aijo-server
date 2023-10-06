@@ -1,4 +1,4 @@
-import { Schema, model as Model, SchemaType, SchemaTypes } from "mongoose";
+import { Schema, model as Model, SchemaTypes } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -16,7 +16,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-
+    fullName: {
+      type: String,
+      require: false,
+    },
     email: {
       type: String,
       unique: true,
@@ -34,6 +37,24 @@ const userSchema = new Schema(
       default: "user",
     },
 
+    gender: {
+      type: String,
+      enum: ["male", "female", "not specified"],
+      required: false,
+    },
+    phoneNumber: {
+      type: String,
+      require: false,
+    },
+
+    fullAddress: {
+      type: String,
+      require: false,
+    },
+    birthDate: {
+      type: Date,
+      require: false,
+    },
     verificationCode: String,
 
     isVerified: {

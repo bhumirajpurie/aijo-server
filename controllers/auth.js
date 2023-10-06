@@ -84,7 +84,6 @@ export const loginUser = catchAsync(async (req, res, next) => {
 
   const isPassword = await user.matchPassword(req.body.password);
   if (!isPassword) throw createError(401, `Password doesn't match`);
-
   sendTokenResponse(user, 200, res);
 });
 
@@ -196,7 +195,7 @@ export const forgotPassword = catchAsync(async (req, res, next) => {
 
     await user.save();
 
-    throw createError(500, "Email cound't be sent");
+    throw createError(500, "Email couldn't be sent");
   }
 });
 
@@ -227,20 +226,10 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 
   res
     .status(200)
-    .send({ status: "success", message: "Your Password has beed changed" });
+    .send({ status: "success", message: "Your Password has been changed" });
 });
 
 const sendTokenResponse = (userData, statusCode, res) => {
   const token = userData.getSignedToken();
-
-  const user = {
-    id: userData._id,
-    firstName: userData.firstName,
-    lastName: userData.lastName,
-    email: userData.email,
-    role: userData.role,
-    isVerified: userData.isVerified,
-  };
-
-  res.status(statusCode).json({ status: "success", token, user });
+  res.status(statusCode).json({ status: "success", token });
 };

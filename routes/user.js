@@ -11,7 +11,7 @@ import { protect, permission } from "../middlewares/auth.js";
 import {
   createUserValidationRules,
   deleteUserValidationRules,
-  getUserValidationRules,
+  updateUserAddressValidationRules,
   updateUserValidationRules,
 } from "../validators/userValidator.js";
 import { validate } from "../middlewares/validate.js";
@@ -32,9 +32,13 @@ router
     createUser
   );
 
+router.route("/my-details").get(protect, validate, getUser);
+router
+  .route("/address-book")
+  .put(protect, updateUserAddressValidationRules(), validate, updateUser);
+
 router
   .route("/:id")
-  .get(protect, getUserValidationRules(), validate, getUser)
   .put(protect, updateUserValidationRules(), validate, updateUser)
   .delete(protect, deleteUserValidationRules(), validate, deleteUser);
 
