@@ -5,6 +5,7 @@ import {
   getPromoCode,
   updatePromoCode,
   deletePromoCode,
+  getMyPromoCodes,
 } from "../controllers/promoCode.js";
 
 import { protect, permission } from "../middlewares/auth.js";
@@ -21,7 +22,7 @@ router
     // permission(["admin"]),
     getPromoCodes
   );
-
+router.route("/my-promo-code").get(protect, validate, getMyPromoCodes);
 router
   .route("/:id")
   .get(protect, permission(["admin"]), getPromoCode)

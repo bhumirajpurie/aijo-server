@@ -11,6 +11,10 @@ const promoCodeSchema = new Schema(
       enum: ["active", "inactive"],
       default: "inactive",
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,

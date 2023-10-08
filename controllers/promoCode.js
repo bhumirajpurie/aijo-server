@@ -11,7 +11,7 @@ export const createPromoCode = catchAsync(async (req, res) => {
   if (!user.promoCode) {
     user.promoCode = [];
   }
-  const promoCode = await PromoCode.create(req.body);
+  const promoCode = await PromoCode.create({ ...req.body, user: req.user });
   user.promoCode.push(promoCode._id);
   await user.save();
   res.status(201).send({
@@ -52,4 +52,13 @@ export const deletePromoCode = catchAsync(async (req, res) => {
   res
     .status(200)
     .send({ status: "success", message: "Promo code deleted successfully" });
+});
+
+export const getMyPromoCodes = catchAsync(async (req, res) => {
+  try {
+    const codes = await PromoCode.find({ user: req.user });
+    if (!codes) return createError("No promo codes found.", 404);
+
+    res.status(200).send({ status: "success", codes });
+  } catch (error) {}
 });
