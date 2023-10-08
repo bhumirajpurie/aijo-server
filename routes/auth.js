@@ -9,6 +9,7 @@ import {
   forgotPassword,
   resetPassword,
   updateEmail,
+  checkAuthentication,
 } from "../controllers/auth.js";
 
 import {
@@ -35,6 +36,7 @@ router.post(
 );
 
 router.post("/login", validate, loginUser);
+router.get("/check-auth", protect, validate, checkAuthentication);
 
 router.put(
   "/update/user-details",
