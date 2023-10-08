@@ -15,19 +15,17 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(
+  .post(protect, createPromoCodeValidationRules(), validate, createPromoCode)
+  .get(
     protect,
-    createPromoCodeValidationRules(),
-    validate,
-    permission(["admin"]),
-    createPromoCode
-  )
-  .get(protect, permission(["admin"]), getPromoCodes);
+    // permission(["admin"]),
+    getPromoCodes
+  );
 
 router
   .route("/:id")
   .get(protect, permission(["admin"]), getPromoCode)
   .put(protect, permission(["admin"]), updatePromoCode)
-  .delete(protect, permission(["admin"]), deletePromoCode);
+  .delete(protect, deletePromoCode);
 
 export default router;

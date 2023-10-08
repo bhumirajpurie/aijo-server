@@ -4,7 +4,7 @@ import createError from "../utils/createError.js";
 import User from "../models/User.js";
 
 export const createPromoCode = catchAsync(async (req, res) => {
-  const user = await User.findById(req.body.affiliateId);
+  const user = await User.findById(req.user);
   if (!user) {
     throw createError(404, "User not found");
   }
@@ -14,9 +14,10 @@ export const createPromoCode = catchAsync(async (req, res) => {
   const promoCode = await PromoCode.create(req.body);
   user.promoCode.push(promoCode._id);
   await user.save();
-  res
-    .status(201)
-    .send({ message: "Promo code created successfully", promoCode });
+  res.status(201).send({
+    status: "success",
+    message: "Promo code created successfully",
+  });
 });
 
 export const getPromoCodes = catchAsync(async (req, res) => {
@@ -49,6 +50,6 @@ export const deletePromoCode = catchAsync(async (req, res) => {
   }
   await PromoCode.findByIdAndRemove(req.params.id);
   res
-    .status(204)
+    .status(200)
     .send({ status: "success", message: "Promo code deleted successfully" });
 });
