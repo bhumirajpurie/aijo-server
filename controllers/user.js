@@ -10,7 +10,7 @@ export const getUsers = catchAsync(async (req, res, next) => {
   res.status(200).send({ status: "success", data: users });
 });
 export const getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find({ email: "khalifaanil84@gmail.com" });
+  const users = await User.find();
   if (!users) throw createError(404, `No users found`);
   res.status(200).send({ status: "success", data: users });
 });
@@ -73,7 +73,6 @@ export const updateAddressBook = catchAsync(async (req, res, next) => {
 // Delete User
 export const deleteUser = catchAsync(async (req, res, next) => {
   const deleteUser = await User.findById(req.params.id);
-
   if (!deleteUser)
     throw createError(404, `User is not found with id of ${req.params.id}`);
 
@@ -81,4 +80,23 @@ export const deleteUser = catchAsync(async (req, res, next) => {
   res
     .status(200)
     .send({ status: "success", message: "User Deleted Successfully" });
+});
+// change isVerified status of user
+export const verifyUser = catchAsync(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) throw createError(404, `User not found`);
+    user.isVerified = !user.isVerified;
+    const newUser = await user.save();
+    res.status(200).send({
+      status: "success",
+      message: "User verified changed successfully",
+      user: newUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 });
