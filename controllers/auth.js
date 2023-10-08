@@ -27,7 +27,7 @@ export const signupUser = catchAsync(async (req, res) => {
     name: user.firstName + " " + user.lastName,
   };
 
-  await verifyEmail(mailOptions);
+  verifyEmail(mailOptions);
 
   // Create Job Schedule
   const job = scheduleJob("59 * * * *", user.email);

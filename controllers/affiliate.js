@@ -21,7 +21,7 @@ export const getUser = catchAsync(async (req, res, next) => {
 
 // Create Affiliate
 export const createAffiliate = catchAsync(async (req, res, next) => {
-  await User.create({ ...req.body, role: "affiliator", isVerified: true });
+  await User.create({ ...req.body, isVerified: true });
   res
     .status(201)
     .send({ status: "success", message: `Affiliate created successfully` });

@@ -1,6 +1,8 @@
 import catchAsync from "../utils/catchAsync.js";
 import createError from "../utils/createError.js";
 import User from "../models/User.js";
+import verificationCode from "../utils/verificationCode.js";
+import verifyEmail from "../utils/verifyEmail.js";
 
 // Get All Users
 export const getUsers = catchAsync(async (req, res, next) => {
@@ -28,8 +30,22 @@ export const getUser = catchAsync(async (req, res, next) => {
 
 // Create User
 export const createUser = catchAsync(async (req, res, next) => {
-  await User.create({ ...req.body, isVerified: true });
+  const code = verificationCode();
   const userRole = req.body?.role || "user";
+  const user = await User.create({ ...req.body, verificationCode: code });
+  // Send verification email
+  const mailOptions = {
+    email: user.email,
+    subject: "Account Verification",
+    code: code,
+    name: user.firstName + " " + user.lastName,
+  };
+
+  verifyEmail(mailOptions);
+  // Create Job Schedule
+  const job = scheduleJob("59 * * * *", user.email);
+  job.start();
+
   res
     .status(201)
     .send({ status: "success", message: `${userRole} created successfully` });
