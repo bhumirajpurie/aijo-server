@@ -25,7 +25,7 @@ export const getUser = catchAsync(async (req, res, next) => {
 
   if (!user) throw createError(404, `User is not found with id of ${req.user}`);
 
-  res.status(200).send({ status: "success", data: user });
+  res.status(200).send({ status: "success", user });
 });
 
 // Create User
@@ -54,10 +54,11 @@ export const createUser = catchAsync(async (req, res, next) => {
 // Update User
 export const updateUser = catchAsync(async (req, res, next) => {
   try {
-    const { firstName, lastName, phoneNumber, birthDate } = req.body;
+    const { firstName, lastName, phoneNumber, birthDate, fullAddress } =
+      req.body;
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { firstName, lastName, phoneNumber, birthDate },
+      { firstName, lastName, phoneNumber, birthDate, fullAddress },
       {
         new: true,
       }

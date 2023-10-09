@@ -73,7 +73,14 @@ export const getProducts = catchAsync(async (req, res) => {
 export const getAllProducts = catchAsync(async (req, res) => {
   const products = await Product.find().select("-__v -createdAt -updatedAt ");
   if (!products) return createError("No products found.", 404);
-  res.status(200).send({ status: "success", products: products });
+  const productsWithFirstImage = products.map((product) => {
+    const image = product.images.length > 0 ? product.images[0] : null;
+    return {
+      ...product._doc,
+      image: image,
+    };
+  });
+  res.status(200).send({ status: "success", products: productsWithFirstImage });
 });
 
 export const getProduct = catchAsync(async (req, res) => {
@@ -85,7 +92,7 @@ export const getProduct = catchAsync(async (req, res) => {
     return createError("Product not found.", 404);
   }
 
-  res.status(200).send({ status: "success", product: product });
+  res.status(200).send({ status: "success", product });
 });
 
 export const updateProduct = catchAsync(async (req, res) => {

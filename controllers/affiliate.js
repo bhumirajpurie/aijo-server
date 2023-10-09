@@ -4,7 +4,9 @@ import User from "../models/User.js";
 
 // Get All Affiliate
 export const getAffiliates = catchAsync(async (req, res, next) => {
-  const users = await User.find({ role: "affiliator" });
+  const users = await User.find({ role: "affiliator" })
+    .select("-password -__v -birthDate -createdAt -updatedAt -role")
+    .populate("promoCode");
   if (!users) throw createError(404, `No affiliates found`);
   res.status(200).send({ status: "success", data: users });
 });

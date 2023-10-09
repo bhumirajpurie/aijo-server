@@ -1,10 +1,5 @@
 import express from "express";
-import {
-  getUser,
-  createUser,
-  updateUser,
-  deleteUser,
-} from "../controllers/user.js";
+import { getUser, updateUser, deleteUser } from "../controllers/user.js";
 
 import { getAffiliates, createAffiliate } from "../controllers/affiliate.js";
 

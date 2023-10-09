@@ -33,7 +33,7 @@ router
     createUser
   );
 
-router.route("/my-details").get(protect, validate, getUser);
+router.route("/me").get(protect, validate, getUser);
 router.route("/all").get(protect, validate, getAllUsers);
 router.route("/verify/:id").patch(verifyUser);
 router
