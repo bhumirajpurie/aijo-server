@@ -4,12 +4,19 @@ import createError from "../utils/createError.js";
 import clearImage from "../utils/clearImage.js";
 
 export const createProduct = catchAsync(async (req, res) => {
-  req.body.colors = JSON.parse(req.body.colors);
-  req.body.sizes = JSON.parse(req.body.sizes);
-  req.body.images = req.files.map((file) => file.path);
+  // const colors = JSON.parse(req.body.colors);
+  // const sizes = JSON.parse(req.body.sizes);
+  //  req.files.map((file) => file.path);
+  const productImage = req.files?.map((file) => `${file.filename}`);
 
-  const product = await Product.create(req.body);
-  res.status(201).send({ status: "success", product: product });
+  const product = await Product.create({
+    ...req.body,
+    images: productImage,
+  });
+  if (!product) throw createError(500, "Product cannot be created");
+  res
+    .status(201)
+    .send({ status: "success", message: "product added successfully" });
 });
 
 export const getProducts = catchAsync(async (req, res) => {
