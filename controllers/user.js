@@ -18,7 +18,7 @@ export const getAllUsers = catchAsync(async (req, res, next) => {
 // Get Single User
 export const getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user).select(
-    "-password -verificationCode -__v -createdAt -updatedAtd"
+    "-password -verificationCode -__v -createdAt -updatedAt"
   );
 
   if (!user) throw createError(404, `User is not found with id of ${req.user}`);
@@ -38,10 +38,10 @@ export const createUser = catchAsync(async (req, res, next) => {
 // Update User
 export const updateUser = catchAsync(async (req, res, next) => {
   try {
-    const { firstName, lastName, phoneNumber, birthDate } = req.body;
+    const { firstName, lastName, phoneNumber, birthDate, gender } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { firstName, lastName, phoneNumber, birthDate },
+      { firstName, lastName, phoneNumber, birthDate, gender },
       {
         new: true,
       }
@@ -52,7 +52,8 @@ export const updateUser = catchAsync(async (req, res, next) => {
 
     res.status(201).send({ status: "success", data: updatedUser });
   } catch (error) {
-    res.status(500).json({
+    console.log("hello")
+    res.status(422).json({
       status: "fail",
       message: error.message,
     });

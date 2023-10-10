@@ -2,6 +2,10 @@ import { Schema, model } from "mongoose";
 
 const addressBookSchema = new Schema(
   {
+    province_id:{
+      type: Number,
+      required: false
+    },
     province: {
       type: String,
       required: false,
@@ -20,6 +24,11 @@ const addressBookSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    fullAddress: {
+      type: String,
+      require: false,
+      default: "",
     },
   },
   {
