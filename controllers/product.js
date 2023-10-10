@@ -105,23 +105,18 @@ export const getProduct = catchAsync(async (req, res) => {
 export const updateProduct = catchAsync(async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (!product) return createError("Product not found.", 404);
-
-  req.body.colors = JSON.parse(req.body.colors);
-  req.body.sizes = JSON.parse(req.body.sizes);
-  req.body.images = req.files.map((file) => file.path);
+  if (req.files) req.body.images = req.files?.map((file) => file.path);
 
   product.images.map((image) => {
     if (!req.body.images.includes(image)) {
       clearImage(image);
     }
   });
-
-  const updatedProduct = await Product.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.status(200).send({ status: "success", product: updatedProduct });
+  await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.status(200).send({
+    status: "success",
+    message: "product updated successfully",
+  });
 });
 
 export const deleteProduct = catchAsync(async (req, res) => {
