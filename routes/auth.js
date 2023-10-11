@@ -26,7 +26,12 @@ import { validate } from "../middlewares/validate.js";
 
 const router = express.Router();
 
-router.post("/signup", signupValidationRules(), validate, signupUser);
+router.post(
+  "/signup",
+  // signupValidationRules(),
+  validate,
+  signupUser
+);
 
 router.post(
   "/verify-email",
