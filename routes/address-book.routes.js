@@ -7,6 +7,7 @@ import {
   getAddressBook,
   deleteAddressBook,
   updateAddressBook,
+  getSingleAddressBook
 } from "../controllers/address-book.controller.js";
 import { protect } from "../middlewares/auth.js";
 import { validate } from "../middlewares/validate.js";
@@ -18,6 +19,7 @@ router
 
 router
   .route("/:id")
+  .get(protect, getSingleAddressBook)
   .delete(protect, deleteAddressBook)
   .put(protect, updateAddressBook);
 export default router;
