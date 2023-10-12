@@ -6,7 +6,7 @@ import createError from "../utils/createError.js";
 
 export const addToOrder = catchAsync(async (req, res) => {
   const { shippingInfo, orderItems } = req.body;
-  const userId = req.user._id;
+  const userId = req.user;
 
   // Loop through all the order items and check the product quantity
   for (const orderItem of orderItems) {
@@ -29,13 +29,15 @@ export const addToOrder = catchAsync(async (req, res) => {
   }
 
   // Create order
-  const userOrder = await Order.create({
+  await Order.create({
     shippingInfo,
     orderItems,
     user: userId,
   });
 
-  res.status(201).send({ status: "success", order: userOrder });
+  res
+    .status(201)
+    .send({ status: "success", message: "order created successfully" });
 });
 
 export const getOrders = catchAsync(async (req, res) => {
@@ -45,7 +47,7 @@ export const getOrders = catchAsync(async (req, res) => {
 });
 
 export const getOrder = catchAsync(async (req, res) => {
-  const order = await Order.find({ user: req.user._id });
+  const order = await Order.find({ user: req.user });
   if (!order) throw createError(404, `Order is empty`);
   res.status(200).send({ status: "success", order: order });
 });
