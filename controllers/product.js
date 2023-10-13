@@ -136,7 +136,7 @@ export const deleteProduct = catchAsync(async (req, res) => {
 });
 
 export const getFeaturedProducts = catchAsync(async (req, res) => {
-  const products = await Product.find().sort({ discount: -1 }).limit(4);
+  const products = await Product.find().sort({ discount: -1 }).limit(6);
 
   // Extract the first image URL from each product's images array
   const productsWithFirstImage = products.map((product) => {

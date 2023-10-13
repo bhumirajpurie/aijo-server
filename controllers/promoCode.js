@@ -62,3 +62,17 @@ export const getMyPromoCodes = catchAsync(async (req, res) => {
     res.status(200).send({ status: "success", codes });
   } catch (error) {}
 });
+
+export const activatePromoCode = catchAsync(async (req, res) => {
+  const promoCode = await PromoCode.findById(req.params.id);
+  if (!promoCode) {
+    return createError("Invalid promo code", 404);
+  }
+  promoCode.status = promoCode.status === "active" ? "inactive" : "active";
+  const savedCode = await promoCode.save();
+  res.status(200).send({
+    status: "success",
+    message: "promo code's status updated successfully",
+    code: req.params.id,
+  });
+});
