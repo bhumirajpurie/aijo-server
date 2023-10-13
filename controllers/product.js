@@ -148,7 +148,9 @@ export const getFeaturedProducts = catchAsync(async (req, res) => {
       category: product.category,
       price: product.price,
       discount: product.discount,
-      image: image, // Include the first image URL
+      image: image, 
+      quantity: product.quantity,
+      // Include the first image URL
     };
   });
 
