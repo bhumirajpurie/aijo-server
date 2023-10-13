@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
   getAllUsers,
+  verifyUser,
 } from "../controllers/user.js";
 import { protect, permission } from "../middlewares/auth.js";
 import {
@@ -32,8 +33,9 @@ router
     createUser
   );
 
-router.route("/my-details").get(protect, validate, getUser);
+router.route("/me").get(protect, validate, getUser);
 router.route("/all").get(protect, validate, getAllUsers);
+router.route("/verify/:id").patch(verifyUser);
 router
   .route("/profile")
   .put(protect, updateUserAddressValidationRules(), validate, updateUser);

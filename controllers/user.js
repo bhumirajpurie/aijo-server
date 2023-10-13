@@ -1,6 +1,8 @@
 import catchAsync from "../utils/catchAsync.js";
 import createError from "../utils/createError.js";
 import User from "../models/User.js";
+import verificationCode from "../utils/verificationCode.js";
+import verifyEmail from "../utils/verifyEmail.js";
 
 // Get All Users
 export const getUsers = catchAsync(async (req, res, next) => {
@@ -9,8 +11,9 @@ export const getUsers = catchAsync(async (req, res, next) => {
   if (!users) throw createError(404, `No users found`);
   res.status(200).send({ status: "success", data: users });
 });
+
 export const getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find({ email: "khalifaanil84@gmail.com" });
+  const users = await User.find();
   if (!users) throw createError(404, `No users found`);
   res.status(200).send({ status: "success", data: users });
 });
@@ -23,13 +26,27 @@ export const getUser = catchAsync(async (req, res, next) => {
 
   if (!user) throw createError(404, `User is not found with id of ${req.user}`);
 
-  res.status(200).send({ status: "success", data: user });
+  res.status(200).send({ status: "success", user });
 });
 
 // Create User
 export const createUser = catchAsync(async (req, res, next) => {
-  await User.create({ ...req.body, isVerified: true });
+  const code = verificationCode();
   const userRole = req.body?.role || "user";
+  const user = await User.create({ ...req.body, verificationCode: code });
+  // Send verification email
+  const mailOptions = {
+    email: user.email,
+    subject: "Account Verification",
+    code: code,
+    name: user.firstName + " " + user.lastName,
+  };
+
+  verifyEmail(mailOptions);
+  // Create Job Schedule
+  const job = scheduleJob("59 * * * *", user.email);
+  job.start();
+
   res
     .status(201)
     .send({ status: "success", message: `${userRole} created successfully` });
@@ -74,7 +91,6 @@ export const updateAddressBook = catchAsync(async (req, res, next) => {
 // Delete User
 export const deleteUser = catchAsync(async (req, res, next) => {
   const deleteUser = await User.findById(req.params.id);
-
   if (!deleteUser)
     throw createError(404, `User is not found with id of ${req.params.id}`);
 
@@ -82,4 +98,23 @@ export const deleteUser = catchAsync(async (req, res, next) => {
   res
     .status(200)
     .send({ status: "success", message: "User Deleted Successfully" });
+});
+// change isVerified status of user
+export const verifyUser = catchAsync(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) throw createError(404, `User not found`);
+    user.isVerified = !user.isVerified;
+    const newUser = await user.save();
+    res.status(200).send({
+      status: "success",
+      message: "User verified changed successfully",
+      user: newUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 });

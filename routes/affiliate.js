@@ -1,10 +1,5 @@
 import express from "express";
-import {
-  getUser,
-  createUser,
-  updateUser,
-  deleteUser,
-} from "../controllers/user.js";
+import { getUser, updateUser, deleteUser } from "../controllers/user.js";
 
 import { getAffiliates, createAffiliate } from "../controllers/affiliate.js";
 
@@ -20,19 +15,16 @@ import { validate } from "../middlewares/validate.js";
 
 const router = express.Router();
 
-// router.use(protect);
-// router.use();
-
-router.route("/").get(protect, getAffiliates).post(
-  // protect,
-  // permission(["admin"]),
-  // createUserValidationRules(),
-  // validate,
-  createUser
-  // (req, res) => {
-  //   res.send("Hello");
-  // }
-);
+router
+  .route("/")
+  .get(protect, getAffiliates)
+  .post(
+    protect,
+    permission(["admin"]),
+    // createUserValidationRules(),
+    validate,
+    createAffiliate
+  );
 
 router
   .route("/:id")

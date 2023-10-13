@@ -27,7 +27,7 @@ export const signupUser = catchAsync(async (req, res) => {
     name: user.firstName + " " + user.lastName,
   };
 
-  await verifyEmail(mailOptions);
+  verifyEmail(mailOptions);
 
   // Create Job Schedule
   const job = scheduleJob("59 * * * *", user.email);
@@ -70,7 +70,7 @@ export const verificationEmail = catchAsync(async (req, res, next) => {
 });
 
 export const loginUser = catchAsync(async (req, res, next) => {
-  const userRole = req.body?.role || "user";
+  // const userRole = req.body?.role || "user";
   const user = await User.findOne({
     email: req.body.email,
   }).select("+password");
@@ -229,5 +229,14 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 
 const sendTokenResponse = (userData, statusCode, res) => {
   const token = userData.getSignedToken();
-  res.status(statusCode).json({ status: "success", token });
+  res.status(statusCode).json({ status: "success", token, user: userData });
 };
+
+export const checkAuthentication = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user).select("-password");
+  if (!user) throw createError(401, "User not found");
+  res.status(200).json({
+    status: "success",
+    user,
+  });
+});
