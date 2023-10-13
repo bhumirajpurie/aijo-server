@@ -148,7 +148,30 @@ export const getFeaturedProducts = catchAsync(async (req, res) => {
       category: product.category,
       price: product.price,
       discount: product.discount,
-      image: image, 
+      image: image,
+      quantity: product.quantity,
+      // Include the first image URL
+    };
+  });
+
+  res.status(200).send({ status: "success", products: productsWithFirstImage });
+});
+
+// new arrival
+export const getNewArrivalProducts = catchAsync(async (req, res) => {
+  const products = await Product.find().sort({ createdAt: -1 }).limit(6);
+
+  // Extract the first image URL from each product's images array
+  const productsWithFirstImage = products.map((product) => {
+    const image = product.images.length > 0 ? product.images[0] : null;
+    return {
+      id: product._id,
+      name: product.name,
+      brand: product.brand,
+      category: product.category,
+      price: product.price,
+      discount: product.discount,
+      image: image,
       quantity: product.quantity,
       // Include the first image URL
     };
