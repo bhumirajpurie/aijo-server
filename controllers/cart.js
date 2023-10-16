@@ -118,6 +118,7 @@ export const getCart = catchAsync(async (req, res) => {
   })
   if (!cart) throw createError(404, `Your cart is empty`);
 
+
   // Extract the first image URL from each product's images array
   const productsWithFirstImage = cart.products.map((productDetails) => {
     const image =
@@ -135,6 +136,7 @@ export const getCart = catchAsync(async (req, res) => {
       size: productDetails.size,
       color: productDetails.color,
       selectedQuantity: productDetails.quantity,
+      availableQuantity: productDetails.product.quantity,
     };
   });
 
