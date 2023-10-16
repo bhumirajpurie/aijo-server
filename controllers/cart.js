@@ -54,7 +54,7 @@ import createError from "../utils/createError.js";
 
 export const addToCart = catchAsync(async (req, res) => {
   const { productId, quantity, size, color } = req.body;
-  const userId = req.user;
+  const userId = req.user._id;
 
   const product = await Product.findById(productId);
   if (!product) {
