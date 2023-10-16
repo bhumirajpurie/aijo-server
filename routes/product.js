@@ -8,6 +8,7 @@ import {
   updateProduct,
   deleteProduct,
   getFeaturedProducts,
+  getNewArrivalProducts,
 } from "../controllers/product.js";
 
 import upload from "../middlewares/multer.js";
@@ -21,6 +22,8 @@ router
 
 router.get("/all", getAllProducts);
 router.route("/featured").get(getFeaturedProducts);
+router.route("/new-arrival").get(getNewArrivalProducts);
+
 
 router
   .route("/:id")

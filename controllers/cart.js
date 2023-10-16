@@ -4,6 +4,54 @@ import Product from "../models/Product.js";
 import catchAsync from "../utils/catchAsync.js";
 import createError from "../utils/createError.js";
 
+// export const addToCart = catchAsync(async (req, res) => {
+//   const { productId, quantity, size, color } = req.body;
+//   const userId = req.user._id;
+
+//   const product = await Product.findById(productId);
+//   if (!product) {
+//     throw createError(404, `Product is not found with id of ${productId}`);
+//   }
+
+//   if (product.quantity < 1) {
+//     throw createError(404, `Product is out of stock`);
+//   }
+
+//   if (product.quantity < quantity) {
+//     throw createError(404, `Not enough quantity available`);
+//   }
+
+//   // Find the user's cart or create a new one if it doesn't exist
+//   const userCart = await Cart.findOne({ user: userId });
+//   if (!userCart) {
+//     const newCart = await Cart.create({
+//       products: [
+//         { product: productId, quantity: quantity, size: size, color: color },
+//       ],
+//       user: userId,
+//     });
+//     return res.status(201).send({ status: "success", cart: newCart });
+//   }
+
+//   // Check if the product already exists in the cart, and update the quantity accordingly
+//   const existingProduct = userCart.products.find(
+//     (p) => p.product.toString() === productId
+//   );
+//   if (existingProduct) {
+//     existingProduct.quantity += quantity;
+//   } else {
+//     userCart.products.push({
+//       product: productId,
+//       quantity,
+//       size,
+//       color,
+//     });
+//   }
+
+//   await userCart.save();
+//   res.status(201).send({ status: "success", cart: userCart });
+// });
+
 export const addToCart = catchAsync(async (req, res) => {
   const { productId, quantity, size, color } = req.body;
   const userId = req.user._id;
@@ -33,13 +81,17 @@ export const addToCart = catchAsync(async (req, res) => {
     return res.status(201).send({ status: "success", cart: newCart });
   }
 
-  // Check if the product already exists in the cart, and update the quantity accordingly
+  // Check if the product with the same color and size already exists in the cart
   const existingProduct = userCart.products.find(
-    (p) => p.product.toString() === productId
+    (p) =>
+      p.product.toString() === productId && p.size === size && p.color === color
   );
+
   if (existingProduct) {
+    // Update the quantity if the product already exists in the cart
     existingProduct.quantity += quantity;
   } else {
+    // If the product doesn't exist in the cart, add it as a new cart item
     userCart.products.push({
       product: productId,
       quantity,
@@ -53,7 +105,8 @@ export const addToCart = catchAsync(async (req, res) => {
 });
 
 export const getCarts = catchAsync(async (req, res) => {
-  const carts = await Cart.find();
+  const carts = await Cart.find().sort({ createdAt: -1 });
+  console.log(carts)
   if (!carts) throw createError(404, `No carts found`);
   res.status(200).send({ status: "success", carts: carts });
 });
@@ -62,8 +115,9 @@ export const getCart = catchAsync(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id }).populate({
     path: "products.product",
     model: "Product",
-  });
+  })
   if (!cart) throw createError(404, `Your cart is empty`);
+
 
   // Extract the first image URL from each product's images array
   const productsWithFirstImage = cart.products.map((productDetails) => {
@@ -82,6 +136,7 @@ export const getCart = catchAsync(async (req, res) => {
       size: productDetails.size,
       color: productDetails.color,
       selectedQuantity: productDetails.quantity,
+      availableQuantity: productDetails.product.quantity,
     };
   });
 
@@ -151,6 +206,7 @@ export const deleteCartItem = catchAsync(async (req, res) => {
   const productIndex = cart.products.findIndex(
     (p) => p.product.toString() === req.params.id
   );
+  console.log(productIndex);
   if (productIndex === -1)
     throw createError(
       404,
@@ -159,5 +215,5 @@ export const deleteCartItem = catchAsync(async (req, res) => {
   cart.products.splice(productIndex, 1);
   const updatedCart = await cart.save();
 
-  res.status(204).send({ status: "success", cart: updatedCart });
+  res.status(200).send({ status: "success", cart: updatedCart });
 });
