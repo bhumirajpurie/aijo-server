@@ -11,6 +11,10 @@ const OrderSchema = new Schema(
         type: String,
         required: true,
       },
+      email: {
+        type: String,
+        required: true,
+      },
       mobileNumber: {
         type: String,
         required: true,
@@ -38,6 +42,16 @@ const OrderSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+    },
+    promoCode: {
+      type: Schema.Types.ObjectId,
+      ref: "PromoCode",
+      required: false,
+    },
+    purchasePrice: {
+      type: Number,
+      default: 0,
+      required: true,
     },
     orderItems: [
       {

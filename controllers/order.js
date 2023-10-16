@@ -41,13 +41,28 @@ export const addToOrder = catchAsync(async (req, res) => {
 });
 
 export const getOrders = catchAsync(async (req, res) => {
-  const orders = await Order.find();
+  const orders = await Order.find().populate({
+    path: "orderItems.product",
+    select: "name images",
+  });
   if (!orders) throw createError(404, `No orders found`);
   res.status(200).send({ status: "success", orders: orders });
 });
 
 export const getOrder = catchAsync(async (req, res) => {
-  const order = await Order.find({ user: req.user });
+  const order = await Order.find({ user: req.user }).populate({
+    path: "orderItems.product",
+    select: "name images",
+  });
   if (!order) throw createError(404, `Order is empty`);
+  res.status(200).send({ status: "success", order: order });
+});
+
+export const getOrderDetails = catchAsync(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate({
+    path: "orderItems.product",
+  });
+  if (!order)
+    throw createError(404, `Order is not found with id of ${req.params.id}`);
   res.status(200).send({ status: "success", order: order });
 });

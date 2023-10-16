@@ -7,7 +7,7 @@ export const createProduct = catchAsync(async (req, res) => {
   // const colors = JSON.parse(req.body.colors);
   // const sizes = JSON.parse(req.body.sizes);
   //  req.files.map((file) => file.path);
-  const productImage = req.files?.map((file) => `${file.filename}`);
+  const productImage = req.files?.map((file) => `${file.path}`);
 
   const product = await Product.create({
     ...req.body,
