@@ -106,7 +106,7 @@ export const addToCart = catchAsync(async (req, res) => {
 
 export const getCarts = catchAsync(async (req, res) => {
   const carts = await Cart.find().sort({ createdAt: -1 });
-  console.log(carts)
+  console.log(carts);
   if (!carts) throw createError(404, `No carts found`);
   res.status(200).send({ status: "success", carts: carts });
 });
@@ -115,9 +115,8 @@ export const getCart = catchAsync(async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id }).populate({
     path: "products.product",
     model: "Product",
-  })
+  });
   if (!cart) throw createError(404, `Your cart is empty`);
-
 
   // Extract the first image URL from each product's images array
   const productsWithFirstImage = cart.products.map((productDetails) => {
