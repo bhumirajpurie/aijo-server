@@ -119,25 +119,27 @@ export const getCart = catchAsync(async (req, res) => {
   if (!cart) throw createError(404, `Your cart is empty`);
 
   // Extract the first image URL from each product's images array
-  const productsWithFirstImage = cart.products.map((productDetails) => {
-    const image =
-      productDetails.product.images.length > 0
-        ? productDetails.product.images[0]
-        : null;
-    return {
-      id: productDetails.product._id,
-      name: productDetails.product.name,
-      brand: productDetails.product.brand,
-      description: productDetails.product.description,
-      price: productDetails.product.price,
-      discount: productDetails.product.discount,
-      image: image, // Include the first image URL
-      size: productDetails.size,
-      color: productDetails.color,
-      selectedQuantity: productDetails.quantity,
-      availableQuantity: productDetails.product.quantity,
-    };
-  });
+  const productsWithFirstImage = cart.products
+    .filter((productDetails) => productDetails.product !== null)
+    .map((productDetails) => {
+      const image =
+        productDetails.product.images.length > 0
+          ? productDetails.product.images[0]
+          : null;
+      return {
+        id: productDetails.product._id,
+        name: productDetails.product.name,
+        brand: productDetails.product.brand,
+        description: productDetails.product.description,
+        price: productDetails.product.price,
+        discount: productDetails.product.discount,
+        image: image, // Include the first image URL
+        size: productDetails.size,
+        color: productDetails.color,
+        selectedQuantity: productDetails.quantity,
+        availableQuantity: productDetails.product.quantity,
+      };
+    });
 
   res.status(200).send({
     status: "success",
