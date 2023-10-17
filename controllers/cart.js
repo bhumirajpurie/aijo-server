@@ -219,7 +219,7 @@ export const deleteCartItem = catchAsync(async (req, res) => {
 
 // delete many
 export const deleteCarts = catchAsync(async (req, res) => {
-  const carts = await Cart.deleteMany({ user: user._id });
+  const carts = await Cart.deleteMany({ user: req.user._id });
   if (!carts) throw createError(404, `No carts found`);
   res
     .status(204)
