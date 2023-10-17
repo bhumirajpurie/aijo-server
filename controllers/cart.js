@@ -106,7 +106,6 @@ export const addToCart = catchAsync(async (req, res) => {
 
 export const getCarts = catchAsync(async (req, res) => {
   const carts = await Cart.find().sort({ createdAt: -1 });
-  console.log(carts);
   if (!carts) throw createError(404, `No carts found`);
   res.status(200).send({ status: "success", carts: carts });
 });
