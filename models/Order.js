@@ -13,7 +13,7 @@ const OrderSchema = new Schema(
       },
       email: {
         type: String,
-        required: true,
+        required: false,
       },
       mobileNumber: {
         type: String,
@@ -48,7 +48,7 @@ const OrderSchema = new Schema(
       ref: "PromoCode",
       required: false,
     },
-    purchasePrice: {
+    totalBillAmount: {
       type: Number,
       default: 0,
       required: true,
