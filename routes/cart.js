@@ -6,6 +6,8 @@ import {
   updateCartItem,
   deleteCart,
   deleteCartItem,
+  getMyCarts,
+  deleteCarts,
 } from "../controllers/cart.js";
 
 import { protect, permission } from "../middlewares/auth.js";
@@ -20,6 +22,8 @@ router
   .delete(protect, deleteCart);
 
 router.route("/all-cart").get(protect, permission(["admin"]), getCarts);
+router.route("/my").get(protect, getMyCarts);
+router.route("/delete-my").get(protect, deleteCarts);
 
 router.route("/products/:id").delete(protect, deleteCartItem);
 

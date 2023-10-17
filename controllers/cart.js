@@ -206,7 +206,6 @@ export const deleteCartItem = catchAsync(async (req, res) => {
   const productIndex = cart.products.findIndex(
     (p) => p.product.toString() === req.params.id
   );
-  console.log(productIndex);
   if (productIndex === -1)
     throw createError(
       404,
@@ -216,4 +215,20 @@ export const deleteCartItem = catchAsync(async (req, res) => {
   const updatedCart = await cart.save();
 
   res.status(200).send({ status: "success", cart: updatedCart });
+});
+
+// delete many
+export const deleteCarts = catchAsync(async (req, res) => {
+  const carts = await Cart.deleteMany({ user: user._id });
+  if (!carts) throw createError(404, `No carts found`);
+  res
+    .status(204)
+    .send({ status: "success", message: "your carts' items are deleted" });
+});
+
+// get my carts
+export const getMyCarts = catchAsync(async (req, res) => {
+  const carts = await Cart.find({ user: req.user._id });
+  if (!carts) throw createError(404, `No carts found`);
+  res.status(200).send({ status: "success", carts });
 });
