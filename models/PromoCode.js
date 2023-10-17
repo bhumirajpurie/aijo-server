@@ -2,9 +2,20 @@ import { Schema, model as Model } from "mongoose";
 
 const promoCodeSchema = new Schema(
   {
-    promoCode: { type: String, required: true, unique: true },
-    discountPercentage: { type: Number, required: true },
-    expiresAt: { type: Date, required: true },
+    promoCode: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    discountPercentage: {
+      type: Number,
+      required: true,
+    },
+    expiresAt: {
+      type: Date,
+      required: true,
+    },
     status: {
       type: String,
       required: true,
