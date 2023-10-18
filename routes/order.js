@@ -7,6 +7,7 @@ import {
   getOrderDetails,
   getRecentOrders,
   getTotalRevenue,
+  getOrdersLast30Days,
 } from "../controllers/order.js";
 
 const router = express.Router();
@@ -14,6 +15,9 @@ const router = express.Router();
 router.route("/").post(protect, addToOrder);
 router.route("/all").get(protect, permission(["admin"]), getOrders);
 router.route("/recent").get(protect, permission(["admin"]), getRecentOrders);
+router
+  .route("/recent-30")
+  .get(protect, permission(["admin"]), getOrdersLast30Days);
 router.route("/revenue").get(protect, permission(["admin"]), getTotalRevenue);
 router.route("/my-orders").get(protect, getOrder);
 router.route("/:id").get(protect, getOrderDetails);
