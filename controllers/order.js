@@ -5,7 +5,7 @@ import catchAsync from "../utils/catchAsync.js";
 import createError from "../utils/createError.js";
 
 export const addToOrder = catchAsync(async (req, res) => {
-  const { shippingInfo, orderItems } = req.body;
+  const { shippingInfo, orderItems, totalBillAmount } = req.body;
   const userId = req.user;
 
   // Loop through all the order items and check the product quantity
@@ -33,6 +33,7 @@ export const addToOrder = catchAsync(async (req, res) => {
     shippingInfo,
     orderItems,
     user: userId,
+    totalBillAmount,
   });
 
   res
@@ -65,4 +66,27 @@ export const getOrderDetails = catchAsync(async (req, res) => {
   if (!order)
     throw createError(404, `Order is not found with id of ${req.params.id}`);
   res.status(200).send({ status: "success", order: order });
+});
+
+// get recent orders -> 3 orders
+export const getRecentOrders = catchAsync(async (_, res) => {
+  const orders = await Order.find().sort("-createdAt").limit(3).populate({
+    path: "orderItems.product",
+    select: "name images",
+  });
+  if (!orders) throw createError(200, `No orders found`);
+  res.status(200).send({ status: "success", orders });
+});
+
+// total revenue
+export const getTotalRevenue = catchAsync(async (_, res) => {
+  const orders = await Order.find();
+  console.log("🚀 ~ file: order.js:83 ~ getTotalRevenue ~ orders:", orders);
+  if (!orders) throw createError(200, `No orders found`);
+  let total = 0;
+  orders.forEach((order) => {
+    total += order.totalBillAmount;
+  });
+
+  res.status(200).send({ status: "success", total });
 });
