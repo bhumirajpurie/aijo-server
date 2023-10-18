@@ -222,7 +222,7 @@ export const deleteCarts = catchAsync(async (req, res) => {
   const carts = await Cart.deleteMany({ user: req.user._id });
   if (!carts) throw createError(404, `No carts found`);
   res
-    .status(204)
+    .status(200)
     .send({ status: "success", message: "your carts' items are deleted" });
 });
 
