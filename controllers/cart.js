@@ -115,7 +115,7 @@ export const getCart = catchAsync(async (req, res) => {
     path: "products.product",
     model: "Product",
   });
-  if (!cart) throw createError(404, `Your cart is empty`);
+  if (!cart) throw createError(200, `Your cart is empty`);
 
   // Extract the first image URL from each product's images array
   const productsWithFirstImage = cart.products

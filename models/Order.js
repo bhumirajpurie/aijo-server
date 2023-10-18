@@ -42,6 +42,7 @@ const OrderSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     promoCode: {
       type: Schema.Types.ObjectId,

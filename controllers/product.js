@@ -20,8 +20,16 @@ export const createProduct = catchAsync(async (req, res) => {
 });
 
 export const getProducts = catchAsync(async (req, res) => {
-  const { keyWord, minPrice, maxPrice, page, sort, perPage } = req.query;
-
+  const {
+    keyWord,
+    minPrice,
+    maxPrice,
+    page,
+    sort,
+    perPage,
+    brands,
+    categories,
+  } = req.query;
   const currentPage = Number(page || 1);
   const productsPerPage = Number(perPage || 12);
 
@@ -41,19 +49,24 @@ export const getProducts = catchAsync(async (req, res) => {
       }
     : {};
 
-  const sortingCriteria = sort || "_id";
+  const brandFilter = brands > 0 ? { brand: { $in: brands?.split(",") } } : {};
 
+  const categoryFilter = categories
+    ? { category: { $in: categories?.split(",") } }
+    : {};
+  const sortingCriteria = sort || "_id";
   const totalProducts = await Product.countDocuments({
-    $and: [priceFilter, searchFilter],
+    $and: [priceFilter, searchFilter, brandFilter, categoryFilter],
   });
 
   const products = await Product.find({
-    $and: [priceFilter, searchFilter],
+    $and: [priceFilter, searchFilter, brandFilter, categoryFilter],
   })
     .sort(sortingCriteria)
     .select("_id name brand category price images discount")
     .skip((currentPage - 1) * productsPerPage)
     .limit(productsPerPage);
+  console.log("🚀 ~ file: product.js:70 ~ getProducts ~ products:", products);
 
   const productsWithFirstImage = products.map((product) => {
     const image = product.images.length > 0 ? product.images[0] : null;
