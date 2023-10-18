@@ -8,8 +8,8 @@ const fileStorage = multer.diskStorage({
 
     if (file.fieldname === "productImage") {
       destinationPath = path.join(destinationPath, "products");
-    } else if (file.fieldname === "categoriesImage") {
-      destinationPath = path.join(destinationPath, "categories");
+    } else if (file.fieldname === "paymentMethodImage") {
+      destinationPath = path.join(destinationPath, "paymentMethods");
     }
 
     cb(null, destinationPath);
