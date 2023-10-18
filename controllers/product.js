@@ -154,8 +154,6 @@ export const getFeaturedProducts = catchAsync(async (req, res) => {
     };
   });
 
-  console.log(productsWithFirstImage)
-
   res.status(200).send({ status: "success", products: productsWithFirstImage });
 });
 

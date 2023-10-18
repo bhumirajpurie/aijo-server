@@ -78,7 +78,7 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("remove", async function (next) {
-  console.log("remove middleware");
+
   next();
 });
 
