@@ -115,7 +115,7 @@ export const getCart = catchAsync(async (req, res) => {
     path: "products.product",
     model: "Product",
   });
-  if (!cart) throw createError(404, `Your cart is empty`);
+  if (!cart) throw createError(200, `Your cart is empty`);
 
   // Extract the first image URL from each product's images array
   const productsWithFirstImage = cart.products
@@ -222,7 +222,7 @@ export const deleteCarts = catchAsync(async (req, res) => {
   const carts = await Cart.deleteMany({ user: req.user._id });
   if (!carts) throw createError(404, `No carts found`);
   res
-    .status(204)
+    .status(200)
     .send({ status: "success", message: "your carts' items are deleted" });
 });
 

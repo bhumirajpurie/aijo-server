@@ -42,6 +42,7 @@ const OrderSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: false,
     },
     promoCode: {
       type: Schema.Types.ObjectId,
@@ -51,6 +52,11 @@ const OrderSchema = new Schema(
     totalBillAmount: {
       type: Number,
       default: 0,
+      required: true,
+    },
+    paymentMethod: {
+      type: Schema.Types.ObjectId,
+      ref: "PaymentMethod",
       required: true,
     },
     orderItems: [

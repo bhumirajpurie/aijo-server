@@ -42,7 +42,6 @@ export const updatePaymentMethod = catchAsync(async (req, res) => {
       new: true,
     }
   );
-
   res.status(200).send({ status: "success", updatedPaymentMethod });
 });
 

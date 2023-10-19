@@ -69,7 +69,6 @@ export const updateUser = catchAsync(async (req, res, next) => {
 
     res.status(201).send({ status: "success", data: updatedUser });
   } catch (error) {
-    console.log("hello");
     res.status(422).json({
       status: "fail",
       message: error.message,
