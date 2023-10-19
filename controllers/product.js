@@ -66,7 +66,6 @@ export const getProducts = catchAsync(async (req, res) => {
     .select("_id name brand category price images discount")
     .skip((currentPage - 1) * productsPerPage)
     .limit(productsPerPage);
-  console.log("🚀 ~ file: product.js:70 ~ getProducts ~ products:", products);
 
   const productsWithFirstImage = products.map((product) => {
     const image = product.images.length > 0 ? product.images[0] : null;

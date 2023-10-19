@@ -78,15 +78,29 @@ export const getRecentOrders = catchAsync(async (_, res) => {
   res.status(200).send({ status: "success", orders });
 });
 
-// total revenue
+// total revenue of last 30 days
 export const getTotalRevenue = catchAsync(async (_, res) => {
-  const orders = await Order.find();
-  console.log("🚀 ~ file: order.js:83 ~ getTotalRevenue ~ orders:", orders);
+  const orders = await Order.find({
+    createdAt: {
+      $gte: new Date(new Date() - 30 * 60 * 60 * 24 * 1000),
+    },
+  });
   if (!orders) throw createError(200, `No orders found`);
   let total = 0;
   orders.forEach((order) => {
     total += order.totalBillAmount;
   });
-
   res.status(200).send({ status: "success", total });
+});
+
+// orders of last 30 days
+export const getOrdersLast30Days = catchAsync(async (_, res) => {
+  const orders = await Order.find({
+    createdAt: {
+      $gte: new Date(new Date() - 30 * 60 * 60 * 24 * 1000),
+    },
+  });
+  if (!orders) throw createError(200, `No orders found`);
+  console.log(orders?.length);
+  res.status(200).send({ status: "success", orders: orders?.length });
 });
