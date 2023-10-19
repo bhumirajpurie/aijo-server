@@ -9,10 +9,12 @@ import {
   getTotalRevenue,
   getOrdersLast30Days,
 } from "../controllers/order.js";
-
+import upload from "../middlewares/multer.js";
 const router = express.Router();
 
-router.route("/").post(protect, addToOrder);
+router
+  .route("/")
+  .post(protect, upload.single("paymentDetails[image]"), addToOrder);
 router.route("/all").get(protect, permission(["admin"]), getOrders);
 router.route("/recent").get(protect, permission(["admin"]), getRecentOrders);
 router
