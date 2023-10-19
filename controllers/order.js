@@ -101,5 +101,6 @@ export const getOrdersLast30Days = catchAsync(async (_, res) => {
     },
   });
   if (!orders) throw createError(200, `No orders found`);
+  console.log(orders?.length);
   res.status(200).send({ status: "success", orders: orders?.length });
 });
