@@ -54,7 +54,6 @@ const OrderSchema = new Schema(
       default: 0,
       required: true,
     },
-    // PaymentMethod
     paymentMethod: {
       type: Schema.Types.ObjectId,
       ref: "PaymentMethod",
