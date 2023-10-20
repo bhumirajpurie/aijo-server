@@ -111,3 +111,34 @@ export const getOrdersLast30Days = catchAsync(async (_, res) => {
   if (!orders) throw createError(200, `No orders found`);
   res.status(200).send({ status: "success", orders: orders?.length });
 });
+
+// get monthly sales -> 12 months
+export const getMonthlySales = catchAsync(async (_, res) => {
+  const orders = await Order.find({
+    createdAt: {
+      $gte: new Date(new Date() - 365 * 60 * 60 * 24 * 1000),
+    },
+  });
+  if (!orders) throw createError(200, `No orders found`);
+  const monthlySales = [];
+  for (let i = 0; i < 12; i++) {
+    let total = 0;
+    orders.forEach((order) => {
+      if (order.createdAt.getMonth() === i) {
+        total += order.totalBillAmount;
+      }
+    });
+    monthlySales.push({
+      name: convertMonth(i),
+      sales: !isNaN(total) ? total.toFixed(0) : 0,
+    });
+  }
+  res.status(200).send({ status: "success", sales: monthlySales });
+});
+
+// convert month 1 to january and so on
+const convertMonth = (month) => {
+  const date = new Date();
+  date.setMonth(month);
+  return date.toLocaleString("en-US", { month: "long" });
+};
