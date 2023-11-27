@@ -10,6 +10,7 @@ import {
   getOrdersLast30Days,
   getMonthlySales,
   deleteOrder,
+  updateOrderStatus,
 } from "../controllers/order.js";
 import upload from "../middlewares/multer.js";
 const router = express.Router();
@@ -17,6 +18,9 @@ const router = express.Router();
 router.route("/all").get(protect, permission(["admin"]), getOrders);
 router.route("/recent").get(protect, permission(["admin"]), getRecentOrders);
 router.route("/sales").get(protect, permission(["admin"]), getMonthlySales);
+router
+  .route("/product-status")
+  .patch(protect, permission(["admin"]), updateOrderStatus);
 router
   .route("/recent-30")
   .get(protect, permission(["admin"]), getOrdersLast30Days);

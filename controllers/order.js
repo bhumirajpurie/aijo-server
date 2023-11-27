@@ -145,3 +145,28 @@ export const deleteOrder = catchAsync(async (req, res) => {
   await Order.findByIdAndDelete(req.params.id);
   res.status(200).send({ status: "success", message: "order deleted" });
 });
+
+// update status of products ordered in the order
+export const updateOrderStatus = catchAsync(async (req, res) => {
+  const { orderId, orderedProductId, status } = req.body;
+  const order = await Order.findById(orderId);
+  if (!order)
+    throw createError(404, `Order is not found with id of ${req.params.id}`);
+  const orderedItem = order.orderItems.find(
+    (orderItem) => orderItem._id == orderedProductId
+  );
+  if (!orderedItem) {
+    throw createError(
+      404,
+      `Ordered item is not found with id of ${orderedProductId}`
+    );
+  }
+  orderedItem.status = status;
+  const product = await order.save();
+  res.status(200).send({
+    status: "success",
+    message: "order status updated",
+    product,
+    order,
+  });
+});
