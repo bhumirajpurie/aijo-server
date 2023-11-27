@@ -19,7 +19,7 @@ router
   .route("/")
   .post(protect, createPromoCodeValidationRules(), validate, createPromoCode)
   .get(
-    protect,
+    // protect,
     // permission(["admin"]),
     getPromoCodes
   );

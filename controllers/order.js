@@ -10,22 +10,17 @@ export const addToOrder = catchAsync(async (req, res) => {
     req.body;
   const userId = req.user;
   const paymentImage = req.file ? req.file.path : null;
-
   // Loop through all the order items and check the product quantity
-  for (const orderItem of JSON.parse(orderItems)) {
+  for (const orderItem of orderItems) {
     const productId = orderItem.product;
     const quantity = orderItem.quantity;
-
     const product = await Product.findById(productId);
-
     if (!product) {
       throw createError(404, `Product is not found with id of ${productId}`);
     }
-
     if (product.quantity < 1) {
       throw createError(404, `Product is out of stock`);
     }
-
     if (product.quantity < quantity) {
       throw createError(404, `Not enough quantity available`);
     }
@@ -37,19 +32,18 @@ export const addToOrder = catchAsync(async (req, res) => {
   if (!payment) throw createError(404, `Payment method is fail to create`);
   // Create order
   await Order.create({
-    shippingInfo: JSON.parse(shippingInfo),
-    orderItems: JSON.parse(orderItems),
+    shippingInfo: shippingInfo,
+    orderItems: orderItems,
     user: userId,
     totalBillAmount,
     paymentMethod: payment._id,
   });
-
   res
     .status(201)
     .send({ status: "success", message: "order created successfully" });
 });
 
-export const getOrders = catchAsync(async (req, res) => {
+export const getOrders = catchAsync(async (_, res) => {
   const orders = await Order.find().populate("paymentMethod").populate({
     path: "orderItems.product",
     select: "name images",
@@ -142,3 +136,12 @@ const convertMonth = (month) => {
   date.setMonth(month);
   return date.toLocaleString("en-US", { month: "long" });
 };
+
+// delete order
+export const deleteOrder = catchAsync(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order)
+    throw createError(404, `Order is not found with id of ${req.params.id}`);
+  await Order.findByIdAndDelete(req.params.id);
+  res.status(200).send({ status: "success", message: "order deleted" });
+});
