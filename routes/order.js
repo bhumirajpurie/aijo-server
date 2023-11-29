@@ -14,6 +14,7 @@ import {
   cancelOrderProduct,
 } from "../controllers/order.js";
 import upload from "../middlewares/multer.js";
+import { orderAuth } from "../middlewares/order-auth.js";
 const router = express.Router();
 
 router.route("/all").get(protect, permission(["admin"]), getOrders);
@@ -30,8 +31,11 @@ router
   .get(protect, permission(["admin"]), getOrdersLast30Days);
 router.route("/revenue").get(protect, permission(["admin"]), getTotalRevenue);
 
-router.route("/").post(upload.single("paymentDetails[image]"), addToOrder);
+router
+  .route("/")
+  .post(orderAuth, upload.single("paymentDetails[image]"), addToOrder);
 router.route("/my-orders").get(protect, getOrder);
 router.route("/:id").get(getOrderDetails);
 router.route("/:id").delete(protect, permission(["admin"]), deleteOrder);
+
 export default router;

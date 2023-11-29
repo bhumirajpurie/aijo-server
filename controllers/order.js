@@ -63,9 +63,11 @@ export const getOrder = catchAsync(async (req, res) => {
 });
 
 export const getOrderDetails = catchAsync(async (req, res) => {
-  const order = await Order.findById(req.params.id).populate({
-    path: "orderItems.product",
-  });
+  const order = await Order.findById(req.params.id)
+    .populate({
+      path: "orderItems.product",
+    })
+    .populate("paymentMethod");
   if (!order)
     throw createError(404, `Order is not found with id of ${req.params.id}`);
   res.status(200).send({ status: "success", order: order });
