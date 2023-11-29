@@ -14,7 +14,6 @@ const promoCodeSchema = new Schema(
     },
     expiresAt: {
       type: Date,
-      required: true,
     },
     status: {
       type: String,
