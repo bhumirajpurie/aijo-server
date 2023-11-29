@@ -146,11 +146,11 @@ export const deleteOrder = catchAsync(async (req, res) => {
   if (!order)
     throw createError(404, `Order is not found with id of ${req.params.id}`);
   // order.orderItems.forEach(async (orderItem) => {
-  //   const product = await Product.findById(orderItem._id);
+  //   const product = await Product.findById(orderItem.product);
   //   if (!product)
   //     throw createError(
   //       404,
-  //       `Product is not found with id of ${orderItem._id}`
+  //       `Product is not found with id of ${orderItem.product}`
   //     );
   //   product.quantity += orderItem.quantity;
   //   await product.save();
@@ -184,40 +184,42 @@ export const updateOrderStatus = catchAsync(async (req, res) => {
 
 // cancel order
 export const cancelOrderProduct = catchAsync(async (req, res) => {
-  const { orderId, orderedProductId, quantity } = req.body;
+  const { orderId, orderedProduct, quantity } = req.body;
   const order = await Order.findById(orderId);
   if (!order)
-    throw createError(404, `Order is not found with id of ${req.params.id}`);
-  // order.orderItems.forEach(async (orderItem) => {
-  //   const product = await Product.findById(orderItem._id);
-  //   if (!product)
-  //     throw createError(
-  //       404,
-  //       `Product is not found with id of ${orderItem._id}`
-  //     );
-  //   product.quantity += orderItem.quantity;
-  //   await product.save();
-  // });
+    throw createError(404, `Order is not found with id of ${orderId}`);
   const orderedItem = order.orderItems.find(
-    (orderItem) => orderItem._id == orderedProductId
+    (orderItem) => orderItem.product == orderedProduct.product._id
   );
   if (!orderedItem) {
     throw createError(
       404,
-      `Ordered item is not found with id of ${orderedProductId}`
+      `Ordered item not found with id of ${orderedProduct.product._id}`
     );
   }
-  const product = await Product.findById(orderedProductId);
-  // if (!product)
-  //   throw createError(
-  //     404,
-  //     `Product is not found with id of ${orderedProductId}`
-  //   );
-  // product.quantity += quantity;
-  // await product.save();
-  // orderedItem.status = "Cancelled";
-  // await order.save();
-  res
-    .status(200)
-    .send({ status: "success", message: "order deleted", product });
+  const product = await Product.findById(orderedProduct.product);
+  if (!product)
+    throw createError(
+      404,
+      `Product is not found with id of ${orderedProduct.product._id}`
+    );
+  product.quantity += quantity;
+  await product.save();
+  orderedItem.status = "Cancelled";
+  await order.save();
+  res.status(200).send({
+    status: "success",
+    message: "order canceled",
+  });
 });
+
+// order.orderItems.forEach(async (orderItem) => {
+//   const product = await Product.findById(orderItem._id);
+//   if (!product)
+//     throw createError(
+//       404,
+//       `Product is not found with id of ${orderItem._id}`
+//     );
+//   product.quantity += orderItem.quantity;
+//   await product.save();
+// });
