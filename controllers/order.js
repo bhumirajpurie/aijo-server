@@ -1,5 +1,4 @@
 import Order from "../models/Order.js";
-// import User from "../models/User.js";
 import Product from "../models/Product.js";
 import catchAsync from "../utils/catchAsync.js";
 import createError from "../utils/createError.js";
@@ -24,6 +23,8 @@ export const addToOrder = catchAsync(async (req, res) => {
     if (product.quantity < quantity) {
       throw createError(404, `Not enough quantity available`);
     }
+    product.quantity -= quantity;
+    await product.save();
   }
   const payment = await Payment.create({
     ...paymentDetails,
@@ -58,7 +59,7 @@ export const getOrder = catchAsync(async (req, res) => {
     select: "name images",
   });
   if (!order) throw createError(404, `Order is empty`);
-  res.status(200).send({ status: "success", order: order });
+  res.status(200).send({ status: "success", order });
 });
 
 export const getOrderDetails = catchAsync(async (req, res) => {
@@ -142,6 +143,16 @@ export const deleteOrder = catchAsync(async (req, res) => {
   const order = await Order.findById(req.params.id);
   if (!order)
     throw createError(404, `Order is not found with id of ${req.params.id}`);
+  // order.orderItems.forEach(async (orderItem) => {
+  //   const product = await Product.findById(orderItem._id);
+  //   if (!product)
+  //     throw createError(
+  //       404,
+  //       `Product is not found with id of ${orderItem._id}`
+  //     );
+  //   product.quantity += orderItem.quantity;
+  //   await product.save();
+  // });
   await Order.findByIdAndDelete(req.params.id);
   res.status(200).send({ status: "success", message: "order deleted" });
 });
@@ -162,11 +173,49 @@ export const updateOrderStatus = catchAsync(async (req, res) => {
     );
   }
   orderedItem.status = status;
-  const product = await order.save();
+  await order.save();
   res.status(200).send({
     status: "success",
     message: "order status updated",
-    product,
-    order,
   });
+});
+
+// cancel order
+export const cancelOrderProduct = catchAsync(async (req, res) => {
+  const { orderId, orderedProductId, quantity } = req.body;
+  const order = await Order.findById(orderId);
+  if (!order)
+    throw createError(404, `Order is not found with id of ${req.params.id}`);
+  // order.orderItems.forEach(async (orderItem) => {
+  //   const product = await Product.findById(orderItem._id);
+  //   if (!product)
+  //     throw createError(
+  //       404,
+  //       `Product is not found with id of ${orderItem._id}`
+  //     );
+  //   product.quantity += orderItem.quantity;
+  //   await product.save();
+  // });
+  const orderedItem = order.orderItems.find(
+    (orderItem) => orderItem._id == orderedProductId
+  );
+  if (!orderedItem) {
+    throw createError(
+      404,
+      `Ordered item is not found with id of ${orderedProductId}`
+    );
+  }
+  const product = await Product.findById(orderedProductId);
+  // if (!product)
+  //   throw createError(
+  //     404,
+  //     `Product is not found with id of ${orderedProductId}`
+  //   );
+  // product.quantity += quantity;
+  // await product.save();
+  // orderedItem.status = "Cancelled";
+  // await order.save();
+  res
+    .status(200)
+    .send({ status: "success", message: "order deleted", product });
 });
